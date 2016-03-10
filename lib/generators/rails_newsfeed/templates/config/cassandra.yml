@@ -1,0 +1,20 @@
+# reads more options from http://datastax.github.io/ruby-driver/api/#cluster-class_method
+<% app_name = RailsNewsfeed::Railtie.app_name %>
+default: &default
+  hosts:
+    - '127.0.0.1'
+  port: 9042
+
+development:
+  <<: *default
+  keyspace: <%= app_name %>_dev
+
+test:
+  <<: *default
+  keyspace: <%= app_name %>_test
+
+production:
+  <<: *default
+  keyspace: <%= app_name %>
+  username: 'cassandra'
+  password: 'cassandra'

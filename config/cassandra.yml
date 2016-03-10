@@ -1,0 +1,16 @@
+default: &default
+  hosts:
+    - '127.0.0.1'
+  port: 9042
+  keyspace: rails_newsfeed_test
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
+  username: 'cassandra'
+  password: 'cassandra'
