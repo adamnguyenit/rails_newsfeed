@@ -25,12 +25,30 @@ module RailsNewsfeed
       { id: id_type, activity_id: :uuid, activity_content: :text, activity_object: :text, activity_time: :timestamp }
     end
 
+    # inserts
+    def self.insert(id, activity, related = true, hide_old = true)
+      ins = new(id: id)
+      ins.insert(activity, related, hide_old)
+    end
+
+    # deletes by id
+    def self.delete(id, act_id = nil, related = false)
+      ins = new(id: id)
+      ins.delete(act_id, related)
+    end
+
+    # gets feeds by id
+    def self.feeds(id, page_size = 10, next_page_token = nil)
+      ins = new(id: id, next_page_token: next_page_token)
+      ins.feeds(page_size)
+    end
+
     # initializes
     def initialize(options = {})
       @id = nil
       @next_page_token = nil
       @id = options[:id] if options.key?(:id)
-      @next_page_token = options[:next_page_token] if options[:next_page_token]
+      @next_page_token = options[:next_page_token] if options.key?(:next_page_token)
     end
 
     # inserts an activity into table
@@ -56,9 +74,22 @@ module RailsNewsfeed
       true
     end
 
-    # deletes an activity from table
-    def delete(activity_id)
-      Connection.delete(self.class.table_name, self.class.schema, id: @id, activity_id: activity_id)
+    # deletes an activity or all activities from this feed
+    def delete(act_id = nil, related = true)
+      tbl = self.class.table_name
+      schema = self.class.schema
+      return Connection.delete(tbl, schema, id: @id, activity_id: act_id) if act_id && !related
+      return Activity.delete(act_id, true) if act_id && related
+      cqls = []
+      Connection.select(tbl, schema, '*', id: @id).each do |r|
+        if related
+          Activity.delete(r['id'].to_s, true)
+          next
+        end
+        cqls.push(Connection.delete(tbl, schema, { id: @id, activity_id: r['id'].to_s }, true))
+      end
+      Connection.batch_cqls(cqls.uniq) unless cqls.empty?
+      true
     end
 
     # gets feeds
@@ -68,12 +99,8 @@ module RailsNewsfeed
       options[:paging_state] = decoded_next_page_token if @next_page_token
       result = Connection.select(self.class.table_name, self.class.schema, '*', { id: @id }, options)
       result.each do |r|
-        n = {
-          id: r['activity_id'].to_s,
-          content: r['activity_content'],
-          object: r['activity_object'],
-          time: r['activity_time'],
-          new_record: false }
+        n = { id: r['activity_id'].to_s, content: r['activity_content'], object: r['activity_object'],
+              time: r['activity_time'], new_record: false }
         @feeds.push(Activity.new(n))
       end
       encoded_next_page_token(result)
@@ -128,8 +155,7 @@ module RailsNewsfeed
           id = r['id'].to_s
           next if id == activity.id
           ins_arr.each do |t|
-            cond = { id: t.id, activity_id: id }
-            cqls.push(Connection.delete(t.class.table_name, t.class.schema, cond, true))
+            cqls.push(Connection.delete(t.class.table_name, t.class.schema, { id: t.id, activity_id: id }, true))
           end
         end
         cqls.uniq
