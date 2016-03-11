@@ -59,15 +59,12 @@ module RailsNewsfeed
       ins_arr = []
       ins_arr.push(self) if hide_old
       cqls = []
-      rl = Relation.related_of(self)
       if related
-        rl.each do |ins|
+        Relation.related_of(self).each do |ins|
           record[:id] = ins.id
           cqls.push(Connection.insert(ins.class.table_name, ins.class.schema, record, true))
           ins_arr.push(ins) if hide_old
         end
-        cqls.uniq
-        ins_arr.uniq
       end
       cqls |= cql_hide_old_feeds_of(activity, ins_arr) if hide_old && !ins_arr.empty?
       Connection.batch_cqls(cqls) unless cqls.empty?

@@ -67,11 +67,7 @@ module RailsNewsfeed
 
     # initializes
     def initialize(options = {})
-      @id = Cassandra::Uuid::Generator.new.now.to_s
-      @content = nil
-      @object = nil
-      @time = DateTime.current.strftime('%Y-%m-%d %H:%M:%S%z')
-      @new_record = true
+      init
       @content = options[:content] if options.key?(:content)
       @content = nil if @content == ''
       @time = options[:time] if options.key?(:time)
@@ -105,6 +101,15 @@ module RailsNewsfeed
     end
 
     protected
+
+      # initializes properties
+      def init
+        @id = Cassandra::Uuid::Generator.new.now.to_s
+        @content = nil
+        @object = nil
+        @time = DateTime.current.strftime('%Y-%m-%d %H:%M:%S%z')
+        @new_record = true
+      end
 
       # inserts
       def insert

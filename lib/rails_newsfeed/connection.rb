@@ -70,11 +70,8 @@ module RailsNewsfeed
         return val.to_i
       when :float, :double
         return val if val.is_a?(Numeric)
-      when :ascii, :text, :varchar
+      when :ascii, :text, :varchar, :timestamp
         return "'#{val.to_s.gsub("'", "''")}'"
-      when :timestamp
-        return "'#{val.strftime('%Y-%m-%d %H:%M:%S%z')}'" if val.is_a?(DateTime)
-        return "'#{val}'" if val.is_a?(String)
       end
     end
 
