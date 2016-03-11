@@ -57,7 +57,7 @@ Create models extend `RailsNewsfeed::NewsfeedModel` and you are ready to go.
 
 # Quick start
 
-Create `UserFeed.rb` like below
+Create `user_feed.rb` like below
 ```ruby
 class UserFeed < RailsNewsfeed::NewsfeedModel
 end
