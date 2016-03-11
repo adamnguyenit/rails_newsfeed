@@ -4,10 +4,11 @@
 [![Dependency Status](https://gemnasium.com/adamnguyenit/rails_newsfeed.svg)](https://gemnasium.com/adamnguyenit/rails_newsfeed)
 [![Code Climate](https://codeclimate.com/github/adamnguyenit/rails_newsfeed/badges/gpa.svg)](https://codeclimate.com/github/adamnguyenit/rails_newsfeed)
 [![Coverage Status](https://coveralls.io/repos/github/adamnguyenit/rails_newsfeed/badge.svg?branch=master)](https://coveralls.io/github/adamnguyenit/rails_newsfeed?branch=master)
-[![Gem Version](http://img.shields.io/gem/v/rails_newsfeed.svg)](https://rubygems.org/gems/rails_newsfeed)
+[![Gem Version](https://badge.fury.io/rb/rails_newsfeed.svg)](https://badge.fury.io/rb/rails_newsfeed)
 ![Download](http://ruby-gem-downloads-badge.herokuapp.com/rails_newsfeed)
-[![GitHub issues](https://img.shields.io/github/issues/adamnguyenit/rails_newsfeed.svg)](https://github.com/adamnguyenit/rails_newsfeed/issues)
 [![GitHub stars](https://img.shields.io/github/stars/adamnguyenit/rails_newsfeed.svg)](https://github.com/adamnguyenit/rails_newsfeed/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/adamnguyenit/rails_newsfeed.svg)](https://github.com/adamnguyenit/rails_newsfeed/issues)
+![Repo Size](https://reposs.herokuapp.com/?path=adamnguyenit/rails_newsfeed)
 
 This is a gem for newsfeed module on rails. It uses Cassandra >= 2.x to store data and control your feeds system.
 
