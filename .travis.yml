@@ -10,7 +10,6 @@ services:
   - cassandra
 
 before_script:
-  - cqlsh -f travis/drop-schema.cql
   - cqlsh -f travis/create-schema.cql
 
 after_script:
