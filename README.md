@@ -4,7 +4,7 @@ This is a gem for newsfeed module on rails. It uses Cassandra >= 2.x to store da
 
 ## Installation
   *Requirement*
-  
+
     Cassandra >= 2.x
     Rails 4.x
     After cassandra installed, it is recommend to increase `batch_size_fail_threshold_in_kb` in your `cassandra.yaml` and restart cassandra. Depends on your size of relation between models.
@@ -105,7 +105,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 Before running test you must apply these cqls into cassandra.
 ```ruby
 CREATE KEYSPACE rails_newsfeed_test WITH REPLICATION = { 'class': 'SimpleStrategy', 'replication_factor': 3 };
-USE KEYSPACE rails_newsfeed_test;
+USE rails_newsfeed_test;
 CREATE TABLE activity (id uuid, content text, time timestamp, object text, PRIMARY KEY (id));
 CREATE TABLE activity_index (id uuid, content text, time timestamp, object text, PRIMARY KEY ((object), id));
 CREATE TABLE feed_table (table_class text, PRIMARY KEY (table_class));

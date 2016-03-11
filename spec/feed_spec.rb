@@ -368,4 +368,66 @@ RSpec.describe 'Feed' do
       RailsNewsfeed::Connection.exec_cql("TRUNCATE #{act_index_tbl}")
     end
   end
+
+  describe 'Delete a feed' do
+    it 'Without others' do
+      # truncates first
+      RailsNewsfeed::Connection.exec_cql("TRUNCATE #{tbl}")
+      RailsNewsfeed::Connection.exec_cql("TRUNCATE #{act_tbl}")
+      RailsNewsfeed::Connection.exec_cql("TRUNCATE #{act_index_tbl}")
+      user_a_id = 1
+      user_b_id = 2
+      user_a_feed = UserFeed.new(id: user_a_id)
+      user_b_feed = UserFeed.new(id: user_b_id)
+      user_a_feed.register(user_b_feed)
+      activity = RailsNewsfeed::Activity.new(content: 'user 1 post photo 1', object: 'photo-1')
+      activity.save
+
+      result = user_a_feed.insert(activity, true, false)
+      expect(result).to eq(true)
+
+      feeds = user_a_feed.feeds
+      next_page_token = user_a_feed.next_page_token
+      expect(feeds).not_to be_empty
+      expect(feeds.length).to eq(1)
+      expect(next_page_token).to eq(nil)
+
+      feed = feeds.first
+      expect(feed.id).to eq(activity.id)
+      expect(feed.content).to eq(activity.content)
+      expect(feed.object).to eq(activity.object)
+      expect(feed.time).to eq(activity.time)
+      feeds = user_b_feed.feeds
+      next_page_token = user_b_feed.next_page_token
+      expect(feeds).not_to be_empty
+      expect(feeds.length).to eq(1)
+      expect(next_page_token).to eq(nil)
+      feed = feeds.first
+      expect(feed.id).to eq(activity.id)
+      expect(feed.content).to eq(activity.content)
+      expect(feed.object).to eq(activity.object)
+      expect(feed.time).to eq(activity.time)
+
+      result = user_a_feed.delete(activity.id, false)
+      expect(result).to eq(true)
+      feeds = user_a_feed.feeds
+      next_page_token = user_a_feed.next_page_token
+      expect(feeds).to be_empty
+      expect(next_page_token).to eq(nil)
+      feeds = user_b_feed.feeds
+      next_page_token = user_b_feed.next_page_token
+      expect(feeds).not_to be_empty
+      expect(feeds.length).to eq(1)
+      expect(next_page_token).to eq(nil)
+      feed = feeds.first
+      expect(feed.id).to eq(activity.id)
+      expect(feed.content).to eq(activity.content)
+      expect(feed.object).to eq(activity.object)
+      expect(feed.time).to eq(activity.time)
+      # truncates when finish
+      RailsNewsfeed::Connection.exec_cql("TRUNCATE #{tbl}")
+      RailsNewsfeed::Connection.exec_cql("TRUNCATE #{act_tbl}")
+      RailsNewsfeed::Connection.exec_cql("TRUNCATE #{act_index_tbl}")
+    end
+  end
 end
