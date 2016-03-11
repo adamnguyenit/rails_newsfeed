@@ -1,4 +1,5 @@
 # Newsfeed for Rails
+[![Build Status](https://travis-ci.org/adamnguyenit/rails_newsfeed.svg?branch=master)](https://travis-ci.org/adamnguyenit/rails_newsfeed)
 
 This is a gem for newsfeed module on rails. It uses Cassandra >= 2.x to store data and control your feeds system.
 
