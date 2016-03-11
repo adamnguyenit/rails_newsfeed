@@ -4,6 +4,10 @@ Bundler.setup
 require 'rails'
 require 'rails_newsfeed'
 require 'models/user_feed'
+
+require 'coveralls'
+Coveralls.wear!
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
