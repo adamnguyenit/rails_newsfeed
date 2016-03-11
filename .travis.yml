@@ -6,5 +6,16 @@ rvm:
   - 2.2.4
   - 2.3.0
 
-script: bundle exec rake spec
-script: bundle exec rspec spec
+services:
+  - cassandra
+
+before_script:
+  - cqlsh -f travis/drop-schema.cql
+  - cqlsh -f travis/create-schema.cql
+
+after_script:
+  - cqlsh -f travis/drop-schema.cql
+
+script:
+  - bundle exec rake spec
+  - bundle exec rspec spec
