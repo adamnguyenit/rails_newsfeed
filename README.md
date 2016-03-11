@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/adamnguyenit/rails_newsfeed.svg?branch=master)](https://travis-ci.org/adamnguyenit/rails_newsfeed)
 [![Dependency Status](https://gemnasium.com/adamnguyenit/rails_newsfeed.svg)](https://gemnasium.com/adamnguyenit/rails_newsfeed)
 [![Code Climate](https://codeclimate.com/github/adamnguyenit/rails_newsfeed/badges/gpa.svg)](https://codeclimate.com/github/adamnguyenit/rails_newsfeed)
+[![Coverage Status](https://coveralls.io/repos/github/adamnguyenit/rails_newsfeed/badge.svg?branch=master)](https://coveralls.io/github/adamnguyenit/rails_newsfeed?branch=master)
 [![Gem Version](http://img.shields.io/gem/v/rails_newsfeed.svg)](https://rubygems.org/gems/rails_newsfeed)
 ![Download](http://ruby-gem-downloads-badge.herokuapp.com/rails_newsfeed)
 [![GitHub issues](https://img.shields.io/github/issues/adamnguyenit/rails_newsfeed.svg)](https://github.com/adamnguyenit/rails_newsfeed/issues)
