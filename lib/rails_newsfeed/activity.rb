@@ -2,8 +2,8 @@ module RailsNewsfeed
   class Activity
     attr_accessor :id
     attr_accessor :content
-    attr_accessor :time
     attr_accessor :object
+    attr_accessor :time
     attr_reader :new_record
 
     # gets table name

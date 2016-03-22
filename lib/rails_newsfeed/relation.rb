@@ -38,9 +38,10 @@ module RailsNewsfeed
     def self.delete(from, to, options = {})
       cond = { from_class: from.class.name, from_id: from.id, to_class: to.class.name, to_id: to.id }
       i = Connection.select(index_table_name, schema, '*', cond).first
-      return true unless i
-      Connection.delete(table_name, schema, from_class: from.class.name, from_id: from.id, id: i['id'].to_s)
-      Connection.delete(index_table_name, schema, cond)
+      if i
+        Connection.delete(table_name, schema, from_class: from.class.name, from_id: from.id, id: i['id'].to_s)
+        Connection.delete(index_table_name, schema, cond)
+      end
       return delete(to, from) if options[:side] == :both
       true
     end
