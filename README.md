@@ -63,7 +63,7 @@ note that you have to change the name of keyspace and models. Keyspace follows y
 
 If you have many type of model (Ex: UserFeed, TopicFeed,...) you have to create model tables much.
 
-Create models extend `RailsNewsfeed::NewsfeedModel` and you are ready to go.
+Create models extend `RailsNewsfeed::NewsfeedModel` then insert the name of model class into `feed_table` and you are ready to go.
 
 # Quick start
 
@@ -72,6 +72,8 @@ Create `user_feed.rb` like below
 class UserFeed < RailsNewsfeed::NewsfeedModel
 end
 ```
+
+Insert `UserFeed` into `feed_table`
 
 Save the activity first
 ```ruby
