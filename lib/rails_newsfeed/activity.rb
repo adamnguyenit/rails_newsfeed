@@ -75,18 +75,16 @@ module RailsNewsfeed
 
     # gets hash from cassandra
     def self.from_cass(type, res)
-      if type == :act
-        id = res['id'].to_s
-        content = res['content']
-        object = res['object']
-        time = res['time']
-      else
-        id = res['activity_id'].to_s
-        content = res['activity_content']
-        object = res['activity_object']
-        time = res['activity_time']
+      h = {}
+      temp = type == :act ? '' : 'activity_'
+      schema.keys.each do |k|
+        key = "#{temp}#{k}"
+        val = k == :id ? res[key].to_s : res[key]
+        val = nil if val == ''
+        h[k] = val
       end
-      { id: id, content: content, time: time, object: object, new_record: false }
+      h[:new_record] = false
+      h
     end
 
     # initializes
