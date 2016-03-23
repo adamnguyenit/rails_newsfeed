@@ -27,20 +27,17 @@ module RailsNewsfeed
 
     # inserts
     def self.insert(id, activity, related = true, hide_old = true)
-      ins = new(id: id)
-      ins.insert(activity, related, hide_old)
+      new(id: id).insert(activity, related, hide_old)
     end
 
     # deletes by id
     def self.delete(id, act_id = nil, related = false)
-      ins = new(id: id)
-      ins.delete(act_id, related)
+      new(id: id).delete(act_id, related)
     end
 
     # gets feeds by id
     def self.feeds(id, page_size = 10, next_page_token = nil)
-      ins = new(id: id, next_page_token: next_page_token)
-      ins.feeds(page_size)
+      new(id: id, next_page_token: next_page_token).feeds(page_size)
     end
 
     # initializes
