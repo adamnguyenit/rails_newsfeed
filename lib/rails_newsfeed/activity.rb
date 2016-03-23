@@ -65,21 +65,26 @@ module RailsNewsfeed
 
     # creates from feed cassandra
     def self.create_from_cass_feed(res)
-      n = { id: res['activity_id'].to_s, content: res['activity_content'], object: res['activity_object'],
-            time: res['activity_time'], new_record: false }
-      new(n)
+      new(from_cass_feed(res))
     end
 
     # creates from activity cassandra
     def self.create_from_cass_act(res)
-      new(id: res['id'].to_s, content: res['content'], time: res['time'], object: res['object'], new_record: false)
+      new(from_cass_act(res))
+    end
+
+    def self.from_cass_act(res)
+      { id: res['id'].to_s, content: res['content'], time: res['time'], object: res['object'], new_record: false }
+    end
+
+    def self.from_cass_feed(res)
+      { id: res['activity_id'].to_s, content: res['activity_content'], object: res['activity_object'],
+        time: res['activity_time'], new_record: false }
     end
 
     # initializes
     def initialize(options = {})
       @id = Cassandra::Uuid::Generator.new.now.to_s
-      @content = nil
-      @object = nil
       @time = DateTime.current.strftime('%Y-%m-%d %H:%M:%S%z')
       @new_record = true
       @content = options[:content] if options.key?(:content)
