@@ -65,6 +65,12 @@ module RailsNewsfeed
       act.delete(show_last)
     end
 
+    def self.create_from_cass(res)
+      n = { id: res['activity_id'].to_s, content: res['activity_content'], object: res['activity_object'],
+            time: res['activity_time'], new_record: false }
+      new(n)
+    end
+
     # initializes
     def initialize(options = {})
       @id = Cassandra::Uuid::Generator.new.now.to_s
