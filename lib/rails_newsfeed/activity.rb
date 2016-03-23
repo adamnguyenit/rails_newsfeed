@@ -84,7 +84,7 @@ module RailsNewsfeed
         id = res['activity_id'].to_s
         content = res['activity_content']
         object = res['activity_object']
-        time = res['activiti_time']
+        time = res['activity_time']
       end
       { id: id, content: content, time: time, object: object, new_record: false }
     end
