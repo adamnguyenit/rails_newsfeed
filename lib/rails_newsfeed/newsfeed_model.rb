@@ -47,10 +47,8 @@ module RailsNewsfeed
 
     # initializes
     def initialize(options = {})
-      @id = nil
-      @next_page_token = nil
-      @id = options[:id] if options.key?(:id)
-      @next_page_token = options[:next_page_token] if options.key?(:next_page_token)
+      @id = options.key?(:id) ? options[:id] : nil
+      @next_page_token = options.key?(:next_page_token) ? options[:next_page_token] : nil
     end
 
     # inserts an activity into table

@@ -91,16 +91,11 @@ module RailsNewsfeed
 
     # initializes
     def initialize(options = {})
-      @id = Cassandra::Uuid::Generator.new.now.to_s
-      @time = DateTime.current.strftime('%Y-%m-%d %H:%M:%S%z')
-      @new_record = true
-      @content = options[:content] if options.key?(:content)
-      @content = nil if @content == ''
-      @time = options[:time] if options.key?(:time)
-      @id = options[:id] if options.key?(:id)
-      @object = options[:object] if options.key?(:object)
-      @object = nil if @object == ''
-      @new_record = options[:new_record] if options.key?(:new_record)
+      @id = options.key?(:id) ? options[:id] : Cassandra::Uuid::Generator.new.now.to_s
+      @content = options.key?(:content) ? options[:content] : nil
+      @object = options.key?(:object) ? options[:object] : nil
+      @time = options.key?(:time) ? options[:time] : DateTime.current.strftime('%Y-%m-%d %H:%M:%S%z')
+      @new_record = options.key?(:new_record) ? options[:new_record] : true
     end
 
     # saves
