@@ -40,6 +40,11 @@ module RailsNewsfeed
       new(id: id, next_page_token: next_page_token).feeds(page_size)
     end
 
+    def self.from_cass_act(id, res)
+      { id: id, activity_id: r['id'].to_s, activity_content: res['content'],
+        activity_object: res['object'], activity_time: res['time'].to_s }
+    end
+
     # initializes
     def initialize(options = {})
       @id = nil
@@ -92,7 +97,7 @@ module RailsNewsfeed
       options = { page_size: page_size.to_i }
       options[:paging_state] = decoded_next_page_token if @next_page_token
       result = Connection.select(self.class.table_name, self.class.schema, '*', { id: @id }, options)
-      result.each { |r| @feeds.push(Activity.create_from_cass(r)) }
+      result.each { |r| @feeds.push(Activity.create_from_cass_feed(r)) }
       encoded_next_page_token(result)
       after_feeds
       @feeds

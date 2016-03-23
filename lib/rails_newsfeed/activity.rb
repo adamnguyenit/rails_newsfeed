@@ -26,7 +26,7 @@ module RailsNewsfeed
     def self.find(id)
       r = Connection.select(table_name, schema, '*', { id: id }, page_size: 1).first
       return nil unless r
-      new(id: r['id'].to_s, content: r['content'], time: r['time'], object: r['object'], new_record: false)
+      create_from_cass_act(r)
     end
 
     # hides all feeds of object
@@ -49,9 +49,7 @@ module RailsNewsfeed
         Connection.select(i_tbl, i_schema, '*', { activity_id: id }, filtering: true).each do |r|
           cqls.push(Connection.delete(i_tbl, i_schema, { id: r['id'], activity_id: r['activity_id'].to_s }, true))
           next unless last
-          n = { id: r['id'], activity_id: last['id'].to_s, activity_content: last['content'],
-                activity_object: last['object'], activity_time: last['time'].to_s }
-          cqls.push(Connection.insert(i_tbl, i_schema, n, true))
+          cqls.push(Connection.insert(i_tbl, i_schema, NewsfeedModel.from_cass_act(r['id'], last), true))
         end
       end
       Connection.batch_cqls(cqls.uniq) unless cqls.empty?
@@ -65,10 +63,16 @@ module RailsNewsfeed
       act.delete(show_last)
     end
 
-    def self.create_from_cass(res)
+    # creates from feed cassandra
+    def self.create_from_cass_feed(res)
       n = { id: res['activity_id'].to_s, content: res['activity_content'], object: res['activity_object'],
             time: res['activity_time'], new_record: false }
       new(n)
+    end
+
+    # creates from activity cassandra
+    def self.create_from_cass_act(res)
+      new(id: res['id'].to_s, content: res['content'], time: res['time'], object: res['object'], new_record: false)
     end
 
     # initializes
