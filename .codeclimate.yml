@@ -9,6 +9,7 @@ engines:
     enabled: true
   rubocop:
     enabled: true
+    config: ".rubocop.yml"
 ratings:
   paths:
   - "**.rb"
