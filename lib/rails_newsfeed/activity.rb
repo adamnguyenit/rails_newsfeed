@@ -65,21 +65,28 @@ module RailsNewsfeed
 
     # creates from feed cassandra
     def self.create_from_cass_feed(res)
-      new(from_cass_feed(res))
+      new(from_cass(:feed, res))
     end
 
     # creates from activity cassandra
     def self.create_from_cass_act(res)
-      new(from_cass_act(res))
+      new(from_cass(:act, res))
     end
 
-    def self.from_cass_act(res)
-      { id: res['id'].to_s, content: res['content'], time: res['time'], object: res['object'], new_record: false }
-    end
-
-    def self.from_cass_feed(res)
-      { id: res['activity_id'].to_s, content: res['activity_content'], object: res['activity_object'],
-        time: res['activity_time'], new_record: false }
+    # gets hash from cassandra
+    def self.from_cass(type, res)
+      if type == :act
+        id = res['id'].to_s
+        content = res['content']
+        object = res['object']
+        time = res['time']
+      else
+        id = res['activity_id'].to_s
+        content = res['activity_content']
+        object = res['activity_object']
+        time = res['activiti_time']
+      end
+      { id: id, content: content, time: time, object: object, new_record: false }
     end
 
     # initializes
