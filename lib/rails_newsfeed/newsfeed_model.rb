@@ -41,7 +41,7 @@ module RailsNewsfeed
     end
 
     def self.from_cass_act(id, res)
-      { id: id, activity_id: r['id'].to_s, activity_content: res['content'],
+      { id: id, activity_id: res['id'].to_s, activity_content: res['content'],
         activity_object: res['object'], activity_time: res['time'].to_s }
     end
 
