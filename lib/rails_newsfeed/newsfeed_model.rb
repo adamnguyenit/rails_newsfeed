@@ -59,7 +59,6 @@ module RailsNewsfeed
                  activity_object: activity.object, activity_time: activity.time }
       return false unless Connection.insert(self.class.table_name, self.class.schema, record)
       ins_arr = []
-      ins_arr.push(self) if hide_old
       cqls = []
       if related
         Relation.related_of(self).each do |ins|
@@ -68,7 +67,10 @@ module RailsNewsfeed
           ins_arr.push(ins) if hide_old
         end
       end
-      cqls |= cql_hide_old_feeds_of(activity, ins_arr) if hide_old && !ins_arr.empty?
+      if hide_old
+        ins_arr.push(self)
+        cqls |= cql_hide_old_feeds_of(activity, ins_arr)
+      end
       Connection.batch_cqls(cqls) unless cqls.empty?
       true
     end
@@ -77,15 +79,17 @@ module RailsNewsfeed
     def delete(act_id = nil, related = true)
       tbl = self.class.table_name
       schema = self.class.schema
-      return Connection.delete(tbl, schema, id: @id, activity_id: act_id) if act_id && !related
-      return Activity.delete(act_id, true) if act_id && related
+      if act_id
+        return Activity.delete(act_id, true) if related
+        return Connection.delete(tbl, schema, id: @id, activity_id: act_id)
+      end
       cqls = []
       Connection.select(tbl, schema, '*', id: @id).each do |r|
         if related
           Activity.delete(r['id'].to_s, true)
-          next
+        else
+          cqls.push(Connection.delete(tbl, schema, { id: @id, activity_id: r['id'].to_s }, true))
         end
-        cqls.push(Connection.delete(tbl, schema, { id: @id, activity_id: r['id'].to_s }, true))
       end
       Connection.batch_cqls(cqls.uniq) unless cqls.empty?
       true
