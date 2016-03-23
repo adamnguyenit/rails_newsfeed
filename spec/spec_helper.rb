@@ -1,6 +1,9 @@
 require 'bundler/setup'
 Bundler.setup
 
+require 'codeclimate-test-reporter'
+CodeClimate::TestReporter.start
+
 require 'rails'
 require 'rails_newsfeed'
 require 'models/user_feed'
