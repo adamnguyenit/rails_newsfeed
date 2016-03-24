@@ -1,6 +1,8 @@
 require 'bundler/setup'
 Bundler.setup
 
+require 'rspec/collection_matchers'
+
 require 'codeclimate-test-reporter'
 CodeClimate::TestReporter.start
 
@@ -10,8 +12,6 @@ require 'models/user_feed'
 
 require 'coveralls'
 Coveralls.wear!
-
-require 'rspec/collection_matchers'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

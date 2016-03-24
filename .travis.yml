@@ -6,6 +6,9 @@ rvm:
   - 2.2.4
   - 2.3.0
 
+install:
+  - bundle install
+
 services:
   - cassandra
 
