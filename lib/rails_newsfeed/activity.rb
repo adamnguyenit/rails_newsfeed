@@ -125,13 +125,8 @@ module RailsNewsfeed
       def insert
         @id ||= Cassandra::Uuid::Generator.new.now.to_s
         @time ||= DateTime.current.strftime('%Y-%m-%d %H:%M:%S%z')
-        return false unless Connection.insert(self.class.table_name, self.class.schema, to_h)
-        unless @object.nil?
-          unless Connection.insert(self.class.index_table_name, self.class.schema, to_h)
-            Connection.delete(self.class.table_name, self.class.schema, id: @id)
-            return false
-          end
-        end
+        Connection.insert(self.class.table_name, self.class.schema, to_h)
+        Connection.insert(self.class.index_table_name, self.class.schema, to_h) unless @object.nil?
         @new_record = false
         true
       end

@@ -55,7 +55,7 @@ module RailsNewsfeed
     def insert(activity, related = true, hide_old = true)
       record = { id: @id, activity_id: activity.id, activity_content: activity.content,
                  activity_object: activity.object, activity_time: activity.time }
-      return false unless Connection.insert(self.class.table_name, self.class.schema, record)
+      Connection.insert(self.class.table_name, self.class.schema, record)
       ins_arr = []
       cqls = []
       if related

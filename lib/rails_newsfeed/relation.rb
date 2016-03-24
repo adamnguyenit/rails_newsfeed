@@ -21,17 +21,9 @@ module RailsNewsfeed
       id = Cassandra::Uuid::Generator.new.now.to_s
       record = { id: id, from_class: from.class.name, from_id: from.id, to_class: to.class.name, to_id: to.id }
       return false unless Connection.insert(table_name, schema, record)
-      unless Connection.insert(index_table_name, schema, record)
-        Connection.delete(table_name, schema, id: id, from_class: from.class.name, from_id: from.id)
-        return false
-      end
-      if options[:side] == :both
-        unless create(to, from)
-          delete(from, to)
-          return false
-        end
-      end
-      true
+      Connection.insert(index_table_name, schema, record)
+      return true unless options.key?(:side) && options[:side] == :both
+      create(to, from)
     end
 
     # deletes relations between two objects
@@ -42,8 +34,8 @@ module RailsNewsfeed
         Connection.delete(table_name, schema, from_class: from.class.name, from_id: from.id, id: i['id'].to_s)
         Connection.delete(index_table_name, schema, cond)
       end
-      return delete(to, from) if options[:side] == :both
-      true
+      return true unless options.key?(:side) && options[:side] == :both
+      delete(to, from)
     end
 
     # gets relateds of object
@@ -65,7 +57,7 @@ module RailsNewsfeed
       i = Connection.select(index_table_name, schema, '*', cond).first
       return false unless i
       cond = { from_class: from.class.name, from_id: from.id, id: i['id'].to_s }
-      return false unless Connection.select(table_name, schema, '*', cond)
+      return false unless Connection.select(table_name, schema, '*', cond).first
       true
     end
   end
