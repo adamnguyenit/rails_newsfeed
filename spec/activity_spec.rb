@@ -193,6 +193,37 @@ RSpec.describe RailsNewsfeed::Activity do
     it { is_expected.to have_exactly(total_object).items }
   end
 
+  describe 'updates activity' do
+    # truncates first
+    RailsNewsfeed::Connection.exec_cql("TRUNCATE #{RailsNewsfeed::Activity.table_name}")
+    RailsNewsfeed::Connection.exec_cql("TRUNCATE #{RailsNewsfeed::Activity.index_table_name}")
+    act = RailsNewsfeed::Activity.new(content: 'user 1 post photo 1')
+    act.save
+    act.content = 'user 2 post photo 1'
+    saved = act.save
+    subject { saved }
+    it { is_expected.to eq(true) }
+  end
+
+  describe 'updates activity (logic)' do
+    # truncates first
+    RailsNewsfeed::Connection.exec_cql("TRUNCATE #{RailsNewsfeed::Activity.table_name}")
+    RailsNewsfeed::Connection.exec_cql("TRUNCATE #{RailsNewsfeed::Activity.index_table_name}")
+    act = RailsNewsfeed::Activity.new(content: 'user 1 post photo 1')
+    act.save
+    act.content = 'user 2 post photo 1'
+    act.save
+    get_act = RailsNewsfeed::Activity.find(act.id)
+    subject { get_act }
+    it { is_expected.not_to eq(nil) }
+    it { is_expected.to be_a(RailsNewsfeed::Activity) }
+    it { is_expected.to have_attributes(id: act.id) }
+    it { is_expected.to have_attributes(content: act.content) }
+    it { is_expected.to have_attributes(object: act.object) }
+    it { is_expected.to have_attributes(time: act.time) }
+    it { is_expected.to have_attributes(new_record: false) }
+  end
+
   describe 'deletes activity' do
     # truncates first
     RailsNewsfeed::Connection.exec_cql("TRUNCATE #{RailsNewsfeed::Activity.table_name}")

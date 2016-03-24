@@ -69,7 +69,7 @@ module RailsNewsfeed
         ins_arr.push(self)
         cqls |= cql_hide_old_feeds_of(activity, ins_arr)
       end
-      Connection.batch_cqls(cqls) unless cqls.empty?
+      Connection.batch_cqls(cqls)
       true
     end
 
@@ -89,7 +89,7 @@ module RailsNewsfeed
           cqls.push(Connection.delete(tbl, schema, { id: @id, activity_id: r['id'].to_s }, true))
         end
       end
-      Connection.batch_cqls(cqls.uniq) unless cqls.empty?
+      Connection.batch_cqls(cqls.uniq)
       true
     end
 

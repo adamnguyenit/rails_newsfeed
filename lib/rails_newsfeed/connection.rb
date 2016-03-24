@@ -10,6 +10,8 @@ module RailsNewsfeed
 
     # updates
     def self.update(tbl, schema, conditions, vals, to_cql = false)
+      # unsets primary keys
+      conditions.keys.each { |k| vals.delete(k) }
       val_s = exported_col_val(schema, vals).join(',')
       cql = "UPDATE #{tbl} SET #{val_s} WHERE #{exported_col_val(schema, conditions).join(' AND ')}"
       return cql if to_cql
@@ -53,6 +55,7 @@ module RailsNewsfeed
 
     # executes batch
     def self.batch_cqls(cqls, options = {})
+      return true if cqls.empty?
       batch = connection.batch do |b|
         cqls.each do |cql|
           b.add(cql)
