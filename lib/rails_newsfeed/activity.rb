@@ -89,10 +89,10 @@ module RailsNewsfeed
 
     # initializes
     def initialize(options = {})
-      @id = options.key?(:id) ? options[:id] : Cassandra::Uuid::Generator.new.now.to_s
+      @id = options.key?(:id) ? options[:id] : nil
       @content = options.key?(:content) ? options[:content] : nil
       @object = options.key?(:object) ? options[:object] : nil
-      @time = options.key?(:time) ? options[:time] : DateTime.current.strftime('%Y-%m-%d %H:%M:%S%z')
+      @time = options.key?(:time) ? options[:time] : nil
       @new_record = options.key?(:new_record) ? options[:new_record] : true
     end
 
@@ -123,6 +123,8 @@ module RailsNewsfeed
 
       # inserts
       def insert
+        @id ||= Cassandra::Uuid::Generator.new.now.to_s
+        @time ||= DateTime.current.strftime('%Y-%m-%d %H:%M:%S%z')
         return false unless Connection.insert(self.class.table_name, self.class.schema, to_h)
         unless @object.nil?
           unless Connection.insert(self.class.index_table_name, self.class.schema, to_h)
