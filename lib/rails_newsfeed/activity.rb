@@ -147,7 +147,7 @@ module RailsNewsfeed
             cqls.push(Connection.insert(i_tbl, i_schema, NewsfeedModel.from_cass_act(r['id'], last), true))
           end
         end
-        Connection.batch_cqls(cqls.uniq) unless cqls.empty?
+        Connection.batch_cqls(cqls.uniq)
         true
       end
 
