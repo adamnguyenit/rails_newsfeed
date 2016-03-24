@@ -2,7 +2,7 @@ module RailsNewsfeed
   class Connection
     # inserts
     def self.insert(tbl, schema, vals, to_cql = false)
-      cql = "INSERT INTO #{tbl} (#{schema.keys.join(',')}) VALUES (#{cass_vals(schema, vals)})"
+      cql = "INSERT INTO #{tbl} (#{vals.keys.join(',')}) VALUES (#{cass_vals(schema, vals)})"
       return cql if to_cql
       exec_cql(cql)
       true
@@ -63,15 +63,12 @@ module RailsNewsfeed
 
     # exports a value to cassandra value
     def self.cass_val(val, type)
+      return 'null' if val.nil?
       case type
-      when :uuid
-        return val
-      when :int, :bigint
-        return val.to_i
-      when :float, :double
-        return val if val.is_a?(Numeric)
       when :ascii, :text, :varchar, :timestamp
         return "'#{val.to_s.gsub("'", "''")}'"
+      else
+        val
       end
     end
 

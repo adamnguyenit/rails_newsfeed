@@ -99,7 +99,7 @@ module RailsNewsfeed
       options = { page_size: page_size.to_i }
       options[:paging_state] = decoded_next_page_token if @next_page_token
       result = Connection.select(self.class.table_name, self.class.schema, '*', { id: @id }, options)
-      result.each { |r| @feeds.push(Activity.create_from_cass_feed(r)) }
+      result.each { |r| @feeds.push(Activity.create_from_cass(:feed, r)) }
       encoded_next_page_token(result)
       after_feeds
       @feeds
