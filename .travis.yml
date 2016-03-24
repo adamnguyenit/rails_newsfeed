@@ -16,4 +16,4 @@ after_script:
   - cqlsh -f travis/drop-schema.cql
 
 script:
-  - bundle exec rspec spec
+  - rspec spec
