@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'cassandra-driver', '~> 3.0.0.rc.1'
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'rspec', '~> 3.4'
   spec.add_development_dependency 'rspec-collection_matchers'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'coveralls'
