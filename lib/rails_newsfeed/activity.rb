@@ -1,6 +1,6 @@
 module RailsNewsfeed
   class Activity
-    attr_accessor :id
+    attr_reader :id
     attr_accessor :content
     attr_accessor :object
     attr_accessor :time
@@ -34,7 +34,14 @@ module RailsNewsfeed
     # creates activity
     def self.create(opt = {})
       act = new(opt)
-      return act if act.save
+      return nil unless act.save
+      act
+    end
+
+    # creates without failling
+    def self.create!(opt = {})
+      create(opt)
+    rescue
       nil
     end
 
@@ -43,6 +50,13 @@ module RailsNewsfeed
       r = Connection.select(table_name, schema, '*', { id: id }, page_size: 1).first
       return nil unless r
       create_from_cass(:act, r)
+    end
+
+    # finds without failling
+    def self.find!(id)
+      find(id)
+    rescue
+      nil
     end
 
     # deletes activities
@@ -61,6 +75,13 @@ module RailsNewsfeed
         FeedTable.all.each { |r| Connection.exec_cql("TRUNCATE #{r.class.table_name}") }
         return true
       end
+    end
+
+    # deletes without failling
+    def self.delete!(opt = {}, show_last = true)
+      delete(opt, show_last)
+    rescue
+      false
     end
 
     # creates from feed cassandra
@@ -91,6 +112,13 @@ module RailsNewsfeed
       update
     end
 
+    # saves without failling
+    def save!
+      save
+    rescue
+      false
+    end
+
     # deletes including activities from feed tables
     def delete(show_last = true)
       return false if @new_record
@@ -98,6 +126,13 @@ module RailsNewsfeed
       Connection.delete(self.class.index_table_name, self.class.schema, object: @object, id: @id) if @object
       return delete_from_feed(@id, nil) unless show_last
       delete_from_feed(@id, last)
+    end
+
+    # deletes without failling
+    def delete!(show_last = true)
+      delete(show_last)
+    rescue
+      false
     end
 
     # converts to hash

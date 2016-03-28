@@ -41,39 +41,17 @@ First, let this gem generate the cassandra config file. Run rails generation
     $ rails g rails_newsfeed:config
 
 and change the configuration follows your system.
-Then let create the schema manual. The schema like below
+Then let create the schema by generator
 
-```ruby
-- KEYSPACE
-  CREATE KEYSPACE <app_cassandra_config_name> WITH REPLICATION = { 'class': 'SimpleStrategy', 'replication_factor': 3 };
+    $ rails g rails_newsfeed:init
 
-- SCHEMA
- activity
-   CREATE TABLE activity (id uuid, content text, time timestamp, object text, PRIMARY KEY (id));
-   CREATE TABLE activity_index (id uuid, content text, time timestamp, object text, PRIMARY KEY ((object), id));
- relation
-   CREATE TABLE relation (id uuid, from_class text, from_id text, to_class text, to_id text, PRIMARY KEY ((from_class, from_id), id));
-   CREATE TABLE relation_index(id uuid, from_class text, from_id text, to_class text, to_id text, PRIMARY KEY ((from_class, from_id, to_class, to_id)));
- feed_table
-   CREATE TABLE feed_table (table_class text, PRIMARY KEY (table_class));
- <model>
-   CREATE TABLE <model> (id <id_type>, activity_id uuid, activity_content text, activity_object text, activity_time timestamp, PRIMARY KEY ((id), activity_id));
-```
-note that you have to change the name of keyspace and models. Keyspace follows your configuration in `config/cassandra.yml`. Model table name is class name with underscore by default. Data type of the id in model is `int` by default.
+And create a model by
 
-If you have many type of model (Ex: UserFeed, TopicFeed,...) you have to create model tables much.
+    $ rails g rails_newsfeed:model user_feed --type_of_id=bigint
 
-Create models extend `RailsNewsfeed::NewsfeedModel` then insert the name of model class into `feed_table` and you are ready to go.
+Change the type_of_id option to match the type of your model
 
 # Quick start
-
-Create `user_feed.rb` like below
-```ruby
-class UserFeed < RailsNewsfeed::NewsfeedModel
-end
-```
-
-Insert `UserFeed` into `feed_table`
 
 Save the activity first
 ```ruby
