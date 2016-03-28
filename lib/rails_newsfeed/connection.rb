@@ -1,5 +1,66 @@
 module RailsNewsfeed
   class Connection
+    class << self
+      private
+
+        # exports a value to cassandra value
+        def cass_val(val, type)
+          return 'null' if val.nil?
+          case type
+          when :ascii, :text, :varchar, :timestamp
+            return "'#{val.to_s.gsub("'", "''")}'"
+          else
+            val
+          end
+        end
+
+        # exports values to cassandra values
+        def cass_vals(schema, vals)
+          cass_vals = []
+          vals.each do |col, val|
+            cass_vals.push(cass_val(val, schema[col]))
+          end
+          cass_vals.join(',')
+        end
+
+        # exports column value pair
+        def exported_col_val(schema, col_val_pair)
+          a = []
+          col_val_pair.each do |col, val|
+            a.push("#{col}=#{cass_val(val, schema[col])}")
+          end
+          a
+        end
+    end
+
+    # gets config
+    def self.config
+      YAML.load_file('config/cassandra.yml')[Rails.env]
+    end
+
+    # gets cassandra connection
+    def self.connection
+      return @connection if @connection
+      cfg = config
+      @connection = Cassandra.cluster(cfg || {}).connect(cfg['keyspace'])
+    end
+
+    # executes cql
+    def self.exec_cql(cql, options = {})
+      connection.execute(cql, options)
+    end
+
+    # executes batch
+    def self.batch_cqls(cqls, options = {})
+      return true if cqls.empty?
+      batch = connection.batch do |b|
+        cqls.each do |cql|
+          b.add(cql)
+        end
+      end
+      exec_cql(batch, options)
+    end
+
     # inserts
     def self.insert(tbl, schema, vals, to_cql = false)
       cql = "INSERT INTO #{tbl} (#{vals.keys.join(',')}) VALUES (#{cass_vals(schema, vals)})"
@@ -39,58 +100,6 @@ module RailsNewsfeed
         options.delete(:filtering)
       end
       exec_cql(cql, options)
-    end
-
-    # gets cassandra connection
-    def self.connection
-      return @connection if @connection
-      config ||= YAML.load_file('config/cassandra.yml')[Rails.env]
-      @connection = Cassandra.cluster(config || {}).connect(config['keyspace'])
-    end
-
-    # executes cql
-    def self.exec_cql(cql, options = {})
-      connection.execute(cql, options)
-    end
-
-    # executes batch
-    def self.batch_cqls(cqls, options = {})
-      return true if cqls.empty?
-      batch = connection.batch do |b|
-        cqls.each do |cql|
-          b.add(cql)
-        end
-      end
-      exec_cql(batch, options)
-    end
-
-    # exports a value to cassandra value
-    def self.cass_val(val, type)
-      return 'null' if val.nil?
-      case type
-      when :ascii, :text, :varchar, :timestamp
-        return "'#{val.to_s.gsub("'", "''")}'"
-      else
-        val
-      end
-    end
-
-    # exports values to cassandra values
-    def self.cass_vals(schema, vals)
-      cass_vals = []
-      vals.each do |col, val|
-        cass_vals.push(cass_val(val, schema[col]))
-      end
-      cass_vals.join(',')
-    end
-
-    # exports column value pair
-    def self.exported_col_val(schema, col_val_pair)
-      a = []
-      col_val_pair.each do |col, val|
-        a.push("#{col}=#{cass_val(val, schema[col])}")
-      end
-      a
     end
   end
 end
