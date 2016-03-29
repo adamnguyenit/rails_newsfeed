@@ -15,9 +15,13 @@ This is a gem for newsfeed module on rails. It uses Cassandra >= 2.x to store da
 ## Installation
   *Requirement*
 
-    Cassandra >= 2.x
-    Rails 4.x
-    After cassandra installed, it is recommend to increase `batch_size_fail_threshold_in_kb` in your `cassandra.yaml` and restart cassandra. Depends on your size of relation between models.
+- Cassandra >= 2.x
+- Rails 4
+- Ruby 2
+
+
+After cassandra installed, it is recommend to increase `batch_size_fail_threshold_in_kb` in your `cassandra.yaml` and restart cassandra. Depends on your size of relation between models.
+
   *Gem*
 
   Add this line to your application's Gemfile:
