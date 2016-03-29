@@ -1,0 +1,20 @@
+# reads more options from http://datastax.github.io/ruby-driver/api/#cluster-class_method
+
+default: &default
+  hosts:
+    - '127.0.0.1'
+  port: 9042
+
+development:
+  <<: *default
+  keyspace: newsfeed_dev
+
+test:
+  <<: *default
+  keyspace: newsfeed_test
+
+production:
+  <<: *default
+  keyspace: newsfeed
+  username: 'cassandra'
+  password: 'cassandra'
