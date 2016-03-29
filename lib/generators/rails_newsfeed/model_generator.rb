@@ -20,13 +20,13 @@ module RailsNewsfeed
         RailsNewsfeed::Connection.exec_cql("DROP TABLE IF EXISTS #{file_name}")
         RailsNewsfeed::Connection.exec_cql("CREATE TABLE #{file_name}
         (id #{t}, activity_id uuid, activity_content text, activity_object text, activity_time timestamp,
-        PRIMARY KEY ((id), activity_id))")
+        PRIMARY KEY ((id), activity_id)) WITH CLUSTERING ORDER BY (activity_id DESC)")
         RailsNewsfeed::Connection.exec_cql("INSERT INTO #{RailsNewsfeed::FeedTable.table_name} (table_class)
         VALUES ('#{class_name}')")
         create_file "app/models/#{file_name}.rb", <<-FILE
-  class #{class_name} < RailsNewsfeed::NewsfeedModel
-    type_of_id :#{t}
-  end
+class #{class_name} < RailsNewsfeed::NewsfeedModel
+  type_of_id :#{t}
+end
       FILE
       end
 
