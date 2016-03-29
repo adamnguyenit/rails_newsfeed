@@ -111,17 +111,17 @@ module RailsNewsfeed
 
     # registers to another
     def register(to, options = {})
-      Relation.create(self, to, options)
+      Relation.create(to, self, options)
     end
 
     # deregisters to another
     def deregister(to, options = {})
-      Relation.delete(self, to, options)
+      Relation.delete(to, self, options)
     end
 
     # checks related
     def register?(to)
-      Relation.related?(self, to)
+      Relation.related?(to, self)
     end
 
     protected
