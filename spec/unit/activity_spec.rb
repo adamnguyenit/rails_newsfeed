@@ -386,6 +386,15 @@ RSpec.describe RailsNewsfeed::Activity do
       subject { RailsNewsfeed::Activity.new(id: 'photo 1').save }
       it { is_expected.to eq(false) }
     end
+    context 'save with update' do
+      subject do
+        act = RailsNewsfeed::Activity.new(content: 'user 1 post photo 1')
+        act.save
+        act.content = 'user 1 post photo 2'
+        act.save
+      end
+      it { is_expected.to eq(true) }
+    end
   end
 
   describe '#save!' do
@@ -400,6 +409,15 @@ RSpec.describe RailsNewsfeed::Activity do
     context 'wrong id format' do
       subject { RailsNewsfeed::Activity.new(id: 'photo 1').save! }
       it { is_expected.to eq(false) }
+    end
+    context 'save with update' do
+      subject do
+        act = RailsNewsfeed::Activity.new(content: 'user 1 post photo 1')
+        act.save!
+        act.content = 'user 1 post photo 2'
+        act.save!
+      end
+      it { is_expected.to eq(true) }
     end
   end
 end
