@@ -67,7 +67,7 @@ It will install some dependencies and gem rails_newsfeed.
     $ rails g rails_newsfeed:config
     $ rails g rails_newsfeed:init
 
-The first command will generate `config/cassandra.yml` for you. Just leave it for default.
+The first command will generate `config/cassandra.yml` for you. Just keep the file content for default.
 
 The second command will read the configuration and create your cassandra schema.
 
@@ -98,7 +98,7 @@ So, create controllers first
     $ rails g controller user
     $ rails g controller activity
 
-Also change the argument of `protect_from_forgery` to `with: :null_session` from `app/controller/application_controller`.
+Also change the argument of `protect_from_forgery` to `with: :null_session` from `app/controller/application_controller.rb`.
 
     protect_from_forgery with: :null_session
 
