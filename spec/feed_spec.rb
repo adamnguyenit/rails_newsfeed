@@ -165,7 +165,7 @@ RSpec.describe 'Feed' do
       user_b_id = 2
       user_a_feed = UserFeed.new(id: user_a_id)
       user_b_feed = UserFeed.new(id: user_b_id)
-      user_a_feed.register(user_b_feed)
+      user_b_feed.register(user_a_feed)
 
       activity_a = RailsNewsfeed::Activity.new(content: 'user 1 post photo 1', object: 'photo-1')
       activity_a.save
@@ -269,7 +269,7 @@ RSpec.describe 'Feed' do
       user_b_id = 2
       user_a_feed = UserFeed.new(id: user_a_id)
       user_b_feed = UserFeed.new(id: user_b_id)
-      user_a_feed.register(user_b_feed)
+      user_b_feed.register(user_a_feed)
 
       activity = RailsNewsfeed::Activity.new(content: 'user 1 post photo 1')
       activity.save
@@ -323,7 +323,7 @@ RSpec.describe 'Feed' do
       user_b_id = 2
       user_a_feed = UserFeed.new(id: user_a_id)
       user_b_feed = UserFeed.new(id: user_b_id)
-      user_a_feed.register(user_b_feed)
+      user_b_feed.register(user_a_feed)
 
       activity = RailsNewsfeed::Activity.new(content: 'user 1 post photo 1', object: 'photo-1')
       activity.save
@@ -379,7 +379,7 @@ RSpec.describe 'Feed' do
       user_b_id = 2
       user_a_feed = UserFeed.new(id: user_a_id)
       user_b_feed = UserFeed.new(id: user_b_id)
-      user_a_feed.register(user_b_feed)
+      user_b_feed.register(user_a_feed)
       activity = RailsNewsfeed::Activity.new(content: 'user 1 post photo 1', object: 'photo-1')
       activity.save
 
