@@ -17,7 +17,8 @@ module RailsNewsfeed
       connection.execute("CREATE TABLE #{RailsNewsfeed::Activity.table_name}
       (id uuid, content text, time timestamp, object text, PRIMARY KEY (id))")
       connection.execute("CREATE TABLE #{RailsNewsfeed::Activity.index_table_name}
-      (id uuid, content text, time timestamp, object text, PRIMARY KEY ((object), id))")
+      (id uuid, content text, time timestamp, object text, PRIMARY KEY ((object), id))
+      WITH CLUSTERING ORDER BY (id DESC)")
       connection.execute("CREATE TABLE #{RailsNewsfeed::FeedTable.table_name}
       (table_class text, PRIMARY KEY (table_class))")
       connection.execute("CREATE TABLE #{RailsNewsfeed::Relation.table_name}
