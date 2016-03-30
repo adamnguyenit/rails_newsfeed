@@ -120,7 +120,7 @@ class UserController < ApplicationController
     user_profile_feed_model = UserProfileFeed.new(id: params[:id], next_page_token: params[:next_page_token])
     @user_profile_feeds = user_profile_feed_model.feeds(params[:limit] || 10)
     @next_page_token = user_profile_feed_model.next_page_token
-    render template: 'users/index'
+    render template: 'user/index'
   end
 
   def new_activity
@@ -128,7 +128,7 @@ class UserController < ApplicationController
     @activity = RailsNewsfeed::Activity.create(content: params[:content], object: params[:object])
     user_profile_feed_model = UserProfileFeed.new(id: params[:id])
     user_profile_feed_model.insert(@activity)
-    render template: 'users/new_activity'
+    render template: 'user/new_activity'
   end
 
   def hide_activity
@@ -180,14 +180,14 @@ json.set! :object, activity.object
 json.set! :time, activity.time
 ```
 
-Create a new file `app/views/users/index.json.jbuilder` with content:
+Create a new file `app/views/user/index.json.jbuilder` with content:
 
 ```ruby
 json.activities @user_profile_feeds, partial: 'partials/activity', as: :activity
 json.next_page_token @next_page_token
 ```
 
-Create a new file `app/views/users/new_activity.json.jbuilder` with content:
+Create a new file `app/views/user/new_activity.json.jbuilder` with content:
 
 ```ruby
 json.activity @activity, partial: 'partials/activity', as: :activity
